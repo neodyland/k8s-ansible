@@ -22,6 +22,7 @@
       backup: true
   - name: Apply kernel params
     command: sysctl --system
+    run_once: true
   - name: Install dependencies (1)
     apt:
       name: ["ca-certificates", "curl", "gnupg", "lsb-release"]
@@ -58,6 +59,7 @@
     systemd_service:
       name: containerd
       state: restarted
+      run_once: true
   - name: Copy sysctl k8s conf
     copy:
       src: ./files/sysctl_k8s.conf
@@ -65,6 +67,7 @@
       backup: true
   - name: Apply k8s sysctl
     command: sysctl --system
+    run_once: true
   - name: Add k8s apt keyring
     apt_key:
       url: https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
