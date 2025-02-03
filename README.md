@@ -1,2 +1,3 @@
 # k8s-ansible
 Kubernetes ansible playbook
+このプロジェクトはKubernetesをansible使ってサクッと立てるのを目的としています。
