@@ -1,0 +1,17 @@
+- name: Setup kubernetes master node
+  hosts: master_1
+  become: yes
+  tasks:
+  - name: Create bootstrap token
+    shell: "echo $(openssl rand -hex 3).$(openssl rand -hex 8)"
+    register: bootstrap_token
+  - name: Copy kubeadm init config
+    template:
+      src: ./files/init_kubelet.yaml.j2
+      dest: ~/init_kubelet.yaml
+  - name: Initialize kubeadm
+    command: kubeadm init --config=/root/init_kubelet.yaml
+  - name: Get kube admin config
+    fetch:
+      src: /etc/kubernetes/admin.conf
+      dest: outputs
