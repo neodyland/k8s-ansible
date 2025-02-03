@@ -3,7 +3,7 @@
   become: yes
   tasks:
   - name: Copy kernel module for containerd
-    ansible.builtin.copy:
+    copy:
       src: ./files/containerd.conf
       dest: /etc/modules-load.d/containerd.conf/
       backup: true
@@ -16,7 +16,19 @@
       name: br_netfilter
       state: present
   - name: Set kernel params
-    ansible.builtin.copy:
+    copy:
       src: ./files/99-kubernetes-cri.conf
       dest: /etc/sysctl.d
       backup: true
+  - name: Apply kernel params
+    command: sysctl --system
+  - name: Install dependencies (1)
+    apt:
+      name: ["ca-certificates", "curl", "gnupg", "lsb-release"]
+      update_cache: yes
+  - name: Create keyrings directory
+    file:
+      state: directory
+      path: /etc/apt/keyrings
+      mode: 0755
+
