@@ -24,7 +24,7 @@
       src: outputs/master_1/etc/kubernetes/admin.conf
       dest: ~/.kube/config
   - name: Install helm
-    command: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+    shell: curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
   - name: Add cilium to repo
     command: helm repo add cilium https://helm.cilium.io/
   - name: Install cilium

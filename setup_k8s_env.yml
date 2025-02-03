@@ -59,7 +59,7 @@
     systemd_service:
       name: containerd
       state: restarted
-      run_once: true
+    run_once: true
   - name: Copy sysctl k8s conf
     copy:
       src: ./files/sysctl_k8s.conf
