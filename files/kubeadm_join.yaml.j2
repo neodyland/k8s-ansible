@@ -1,0 +1,26 @@
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: JoinConfiguration
+nodeRegistration:
+  criSocket: "unix:///var/run/containerd/containerd.sock"
+discovery:
+  bootstrapToken:
+    token: {{ token.stdout }}
+    caCertHashes:
+    - "sha256:{{ discovery_ca.stdout }}"
+    apiServerEndpoint: 172.16.55.50:6443
+---
+apiVersion: kubeadm.k8s.io/v1beta4
+kind: ClusterConfiguration
+controllerManager:
+  extraArgs:
+  - name: bind-address
+    value: "0.0.0.0" # Used by Prometheus Operator
+scheduler:
+  extraArgs:
+  - name: bind-address
+    value: "0.0.0.0" # Used by Prometheus Operator
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+cgroupDriver: "systemd"
+protectKernelDefaults: true

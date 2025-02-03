@@ -2,16 +2,30 @@
   hosts: master_1
   become: yes
   tasks:
-  - name: Create kubeadm join command
-    command: kubeadm token create --print-join-command
-    register: join_cmd
-  - name: Share join command
-    set_fact:
-      join_cmd: "{{ join_cmd.stdout }}"
+  - name: Create join token
+    command: kubeadm token create
+    register: token
+  - name: Generate discovery CA
+    shell: |
+      openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | \
+        openssl dgst -sha256 -hex | sed 's/^.* //'
+    register: discovery_ca
+  - name: Create config
+    template:
+      src: ./files/kubeadm_join.yaml.j2
+      dest: /root/kubeadm_join.yaml
+  - name: Fetch config
+    fetch:
+      src: /root/kubeadm_join.yaml
+      dest: outputs
 
 - name: Join to cluster
   hosts: worker
   become: yes
   tasks:
+  - name: Copy config
+    copy:
+      src: ./outputs/master_1/root/kubeadm_join.yaml
+      dest: /root/kubeadm_join.yaml
   - name: Join to cluster
-    command: "${{ join_cmd }}"
+    command: kubeadm join --config /root/kubeadm_join.yaml
