@@ -1,0 +1,1 @@
+ansible-playbook -i hosts.yml setup_k8s.yml

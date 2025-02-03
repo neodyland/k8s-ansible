@@ -1,0 +1,22 @@
+- name: Setup kernel parameters
+  hosts: master_1
+  become: yes
+  tasks:
+  - name: Copy kernel module for containerd
+    ansible.builtin.copy:
+      src: ./files/containerd.conf
+      dest: /etc/modules-load.d/containerd.conf/
+      backup: true
+  - name: Apply overlay module
+    modprobe:
+      name: overlay
+      state: present
+  - name: Apply br_netfilter module
+    modprobe:
+      name: br_netfilter
+      state: present
+  - name: Set kernel params
+    ansible.builtin.copy:
+      src: ./files/99-kubernetes-cri.conf
+      dest: /etc/sysctl.d
+      backup: true
