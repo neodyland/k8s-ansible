@@ -7,14 +7,11 @@
       src: ./files/containerd.conf
       dest: /etc/modules-load.d/containerd.conf/
       backup: true
-  - name: Apply overlay module
+  - name: Apply overlay and br_netfilter module
     modprobe:
-      name: overlay
+      name: "{{ item }}"
       state: present
-  - name: Apply br_netfilter module
-    modprobe:
-      name: br_netfilter
-      state: present
+    loop: [overlay, br_netfilter]
   - name: Set kernel params
     copy:
       src: ./files/99-kubernetes-cri.conf
