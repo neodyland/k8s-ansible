@@ -23,6 +23,10 @@
 - name: Join to cluster
   hosts: worker
   become: yes
+  vars_prompt:
+  - name: kubeapi_endpoint
+    prompt: What is your kubeapi endpoint? (ex. 172.16.55.50:6443)
+    private: no
   tasks:
   - name: Copy config
     copy:

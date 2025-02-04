@@ -7,7 +7,7 @@ discovery:
     token: {{ token.stdout }}
     caCertHashes:
     - "sha256:{{ discovery_ca.stdout }}"
-    apiServerEndpoint: 172.16.55.50:6443
+    apiServerEndpoint: {{ kubeapi_endpoint }}
 ---
 apiVersion: kubeadm.k8s.io/v1beta4
 kind: ClusterConfiguration
