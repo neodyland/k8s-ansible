@@ -1,6 +1,10 @@
 - name: Create kubernetes join command
   hosts: master_1
   become: yes
+  vars_prompt:
+  - name: kubeapi_endpoint
+    prompt: What is your kubeapi endpoint? (ex. 172.16.55.50:6443)
+    private: no
   tasks:
   - name: Create join token
     command: kubeadm token create
@@ -23,10 +27,6 @@
 - name: Join to cluster
   hosts: worker
   become: yes
-  vars_prompt:
-  - name: kubeapi_endpoint
-    prompt: What is your kubeapi endpoint? (ex. 172.16.55.50:6443)
-    private: no
   tasks:
   - name: Copy config
     copy:
